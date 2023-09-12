@@ -1,6 +1,6 @@
 #include "stdbool.h"
 #include "standard_calc.h"
-
+#include <math.h>
 /**
  * @brief Bounds the provided angle between [-180, 180) degrees.
  *
@@ -13,7 +13,21 @@
  * @return float: The bounded angle in degrees.
  */
 float bound_to_180(float angle) {
-    return 0;
+    //Convert angle it is in range of (-360,360)
+    angle = angle - (int)(angle/360)*360.0;
+
+    //Check angle value and bound it to range of [-180,180)
+    float boundAngle;
+    if (angle >= 180.0) {
+        boundAngle = angle - 360.0;
+    }
+    else if (angle < -180.0) {
+        boundAngle = angle + 360.0;
+    }
+    else {
+        boundAngle = angle;
+    }
+    return boundAngle;
 }
 
 /**
@@ -29,5 +43,32 @@ float bound_to_180(float angle) {
  * @return bool: TRUE when `middle_angle` is not in the reflex angle of `first_angle` and `second_angle`, FALSE otherwise
  */
 bool is_angle_between(float first_angle, float middle_angle, float second_angle) {
-    return true;
+    
+    //Convert given angles to be in range of [-180,180)
+    first_angle = bound_to_180(first_angle);
+    middle_angle = bound_to_180(middle_angle);
+    second_angle = bound_to_180(second_angle);
+
+    //Normalize first_angle and second_angle with respect to middle_angle
+    float normalized_first_angle = bound_to_180(first_angle - middle_angle);
+    float normalized_second_angle = bound_to_180(second_angle - middle_angle);
+
+    //Middle_angle is not in reflex region if:
+    //normalized_first_angle is in quadrant I and normalized_second_angle is in quadrant IV OR
+    //the normalized_first_angle is in quadrant IV and normalized_second_angle is in quadrant I
+    if (normalized_first_angle >= 0 
+        && normalized_second_angle <= 0
+        && normalized_first_angle - normalized_second_angle <= 180){
+            return true;
+        } 
+        
+    else if (normalized_first_angle <= 0
+          &&  normalized_second_angle >= 0
+          && normalized_second_angle - normalized_first_angle <= 180) {
+            return true;
+        }
+        
+    else {
+        return false;
+    }
 }

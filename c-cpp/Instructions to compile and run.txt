@@ -1,0 +1,8 @@
+Had problems running makefile, I performed the following steps to compile and run my code:
+
+1. open command prompt
+2. change directory to UBCSailbot-software-quiz/c-cpp 
+3. ran the following lines on command line to run my cpp code:
+
+    g++ *.cpp cutest/CuTest.c -Wall -o test_standard_calc.exe
+    ./test_standard_calc.exe
